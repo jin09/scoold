@@ -205,7 +205,10 @@ public final class ScooldUtils {
 		// multiple admins are now allowed only in Scoold PRO
 		String admins = Config.getConfigParam("admins", "");
 		if (!StringUtils.isBlank(admins)) {
-			ADMINS.add(admins);
+			String[] adminList = admins.split("[,]", 0);
+			for(String admin: adminList) {
+				ADMINS.add(admin.trim());
+			}
 		}
 	}
 
