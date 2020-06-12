@@ -25,6 +25,11 @@ import java.util.LinkedList;
  */
 public class Question extends Post {
 	private static final long serialVersionUID = 1L;
+	public String user_name = null;
+	public String user_image_url = null;
+	public String body_html = null;
+	public String question_url = null;
+	public String question_title = null;
 
 	public Question() {
 		super();

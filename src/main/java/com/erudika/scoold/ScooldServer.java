@@ -46,6 +46,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -55,6 +56,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Alex Bogdanovski [alex@erudika.com]
  */
 @SpringBootApplication
+@EnableScheduling
 public class ScooldServer extends SpringBootServletInitializer {
 
 	static {

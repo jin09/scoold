@@ -352,9 +352,6 @@
 
 						<div class="row mbn">
 							<div class="col l6 s12 sTextCenter">
-								#set($_liclink = $utils.formatMessage("$!lang.get('license')",
-								'<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons</a>') )
-								<i class="fa fa-creative-commons"></i> $_liclink
 							</div>
 							<div class="col l6 s12 sTextCenter ${footerAlignClass}">
 								#if($showBranding)
@@ -362,6 +359,8 @@
 									<span>Custom built with <span class="heart">❤</span> by <a href="https://github.com/jin09">
 										Gautam</a>
 									</span>
+									<br>
+									<a href="https://docs.google.com/forms/d/e/1FAIpQLSfXHzuFRm_rFOX2WiW54O6QvGy6q1pWePrKIPXBMtMf7eSVeA/viewform">Feedback Form</a>
 								#end
 							</div>
 						</div>

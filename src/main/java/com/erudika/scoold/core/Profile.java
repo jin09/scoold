@@ -73,6 +73,12 @@ public class Profile extends Sysprop {
 	@Stored private Integer monthlyVotes;
 	@Stored private Integer weeklyVotes;
 
+	public int rank = -1;
+	public String user_image_url = null;
+	public String user_name = null;
+	public boolean first_pos = false;
+	public boolean second_pos = false;
+	public boolean third_pos = false;
 	private transient String newbadges;
 	private transient Integer newreports;
 	private transient User user;

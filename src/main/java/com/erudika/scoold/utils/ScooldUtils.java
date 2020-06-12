@@ -111,7 +111,7 @@ public final class ScooldUtils {
 	private static final Map<String, String> FILE_CACHE = new ConcurrentHashMap<String, String>();
 	private static final Set<String> APPROVED_DOMAINS = new HashSet<>();
 	private static final Set<String> ADMINS = new HashSet<>();
-	private static final String EMAIL_ALERTS_PREFIX = "email-alerts" + Config.SEPARATOR;
+	public static final String EMAIL_ALERTS_PREFIX = "email-alerts" + Config.SEPARATOR;
 
 	private static final Profile API_USER;
 	private static final Set<String> CORE_TYPES;
@@ -315,8 +315,10 @@ public final class ScooldUtils {
 			if (!u.getIdentityProvider().equals("generic")) {
 				sendWelcomeEmail(u, false, req);
 			}
-			// by default subscribe to all new posts
+			// by default subscribe to all new posts and email digest
 			subscribeToNewPosts(authUser.getUser());
+			subscribeToDigest(authUser.getUser());
+
 			Map<String, Object> payload = new LinkedHashMap<>(ParaObjectUtils.getAnnotatedFields(authUser, false));
 			payload.put("user", u);
 			triggerHookEvent("user.signup", payload);
@@ -460,6 +462,17 @@ public final class ScooldUtils {
 		return false;
 	}
 
+	public Object isSubscribedToDailyDigest(HttpServletRequest req) {
+		Profile authUser = getAuthUser(req);
+		if (authUser != null) {
+			User u = authUser.getUser();
+			if (u != null) {
+				return getNotificationSubscribers(EMAIL_ALERTS_PREFIX + "daily_digest_email").contains(u.getEmail());
+			}
+		}
+		return false;
+	}
+
 	public void subscribeToNewPosts(User u) {
 		if (u != null) {
 			subscribeToNotifications(u.getEmail(), EMAIL_ALERTS_PREFIX + "new_post_subscribers");
@@ -469,6 +482,18 @@ public final class ScooldUtils {
 	public void unsubscribeFromNewPosts(User u) {
 		if (u != null) {
 			unsubscribeFromNotifications(u.getEmail(), EMAIL_ALERTS_PREFIX + "new_post_subscribers");
+		}
+	}
+
+	public void subscribeToDigest(User u) {
+		if (u != null) {
+			subscribeToNotifications(u.getEmail(), EMAIL_ALERTS_PREFIX + "daily_digest_email");
+		}
+	}
+
+	public void unsubscribeFromDigest(User u) {
+		if (u != null) {
+			unsubscribeFromNotifications(u.getEmail(), EMAIL_ALERTS_PREFIX + "daily_digest_email");
 		}
 	}
 
@@ -484,7 +509,7 @@ public final class ScooldUtils {
 		return Collections.emptyMap();
 	}
 
-	private void sendEmailsToSubscribersInSpace(Set<String> emails, String space, String subject, String html) {
+	public void sendEmailsToSubscribersInSpace(Set<String> emails, String space, String subject, String html) {
 		int i = 0;
 		int max = Config.MAX_ITEMS_PER_PAGE;
 		List<String> terms = new ArrayList<>(max);
@@ -1224,9 +1249,16 @@ public final class ScooldUtils {
 
 	public String compileEmailTemplate(Map<String, Object> model) {
 		model.put("footerhtml", Config.getConfigParam("emails_footer_html",
-				"<a href=\"" + ScooldServer.getServerURL() + "\">" + Config.APP_NAME + "</a> &bull; "
+				"<a href=\"https://docs.google.com/forms/d/e/1FAIpQLSfXHzuFRm_rFOX2WiW54O6QvGy6q1pWePrKIPXBMtMf7eSVeA/viewform\">Feedback</a> &bull; " + "<a href=\"" + ScooldServer.getServerURL() + "\">" + Config.APP_NAME + "</a> &bull; "
 				+ "<a href=\"https://github.com/jin09/scoold\">Contribute</a>"));
 		return Utils.compileMustache(model, loadEmailTemplate("notify"));
+	}
+
+	public String compileDigestEmailTemplate(Map<String, Object> model) {
+		model.put("footerhtml", Config.getConfigParam("emails_footer_html",
+				"<a href=\"https://docs.google.com/forms/d/e/1FAIpQLSfXHzuFRm_rFOX2WiW54O6QvGy6q1pWePrKIPXBMtMf7eSVeA/viewform\">Feedback</a> &bull; " + "<a href=\"" + ScooldServer.getServerURL() + "\">" + Config.APP_NAME + "</a> &bull; "
+						+ "<a href=\"https://github.com/jin09/scoold\">Contribute</a>"));
+		return Utils.compileMustache(model, loadEmailTemplate("digest"));
 	}
 
 	public boolean isValidJWToken(String jwt) {

@@ -65,6 +65,7 @@ public class SettingsController {
 		model.addAttribute("path", "settings.vm");
 		model.addAttribute("title", utils.getLang(req).get("settings.title"));
 		model.addAttribute("newpostEmailsEnabled", utils.isSubscribedToNewPosts(req));
+		model.addAttribute("dailyDigestEnabled", utils.isSubscribedToDailyDigest(req));
 		model.addAttribute("includeGMapsScripts", utils.isNearMeFeatureEnabled());
 		return "base";
 	}
@@ -74,7 +75,7 @@ public class SettingsController {
 			@RequestParam(required = false) String replyEmailsOn, @RequestParam(required = false) String commentEmailsOn,
 			@RequestParam(required = false) String oldpassword, @RequestParam(required = false) String newpassword,
 			@RequestParam(required = false) String newpostEmailsOn, @RequestParam(required = false) String favtagsEmailsOn,
-			HttpServletRequest req, HttpServletResponse res) {
+		    @RequestParam(required = false) String dailyDigestOn, HttpServletRequest req, HttpServletResponse res) {
 		if (utils.isAuthenticated(req)) {
 			Profile authUser = utils.getAuthUser(req);
 			setFavTags(authUser, tags);
@@ -92,6 +93,12 @@ public class SettingsController {
 				utils.subscribeToNewPosts(authUser.getUser());
 			} else {
 				utils.unsubscribeFromNewPosts(authUser.getUser());
+			}
+
+			if (Boolean.valueOf(dailyDigestOn)) {
+				utils.subscribeToDigest(authUser.getUser());
+			} else {
+				utils.unsubscribeFromDigest(authUser.getUser());
 			}
 
 			if (resetPasswordAndUpdate(authUser.getUser(), oldpassword, newpassword)) {

@@ -103,6 +103,21 @@
 					<span class="mll mediumText">$!lang.get('settings.replyemails')</span>
 				</div>
 			</div>
+			<div class="mbm">
+				<div class="switch">
+					<label>
+						$!lang.get('off')
+						#if($dailyDigestEnabled)
+						<input type="checkbox" name="dailyDigestOn" checked="checked" value="true">
+						#else
+						<input type="checkbox" name="dailyDigestOn" value="true">
+						#end
+						<span class="lever"></span>
+						$!lang.get('on')
+					</label>
+					<span class="mll mediumText">Send me a daily digest on my email</span>
+				</div>
+			</div>
 			<div class="mbl">
 				<div class="switch">
 					<label>
